@@ -1,5 +1,6 @@
 #include <python3.14/Python.h>
 #include "basic_func.h"
+#include "common.h"
 
 static PyObject *simple_minerva_py(PyObject *self, PyObject *args){
     double bunch_size;
@@ -23,6 +24,21 @@ static struct PyModuleDef neucommModule = {
 };
 
 PyMODINIT_FUNC PyInit_neucomm(void) {
-    return PyModule_Create(&neucommModule);
+    printf("tp_name = %p\n", ExtractionPy.tp_name);
+    ExtractionPy_init(&ExtractionPy);
+    if(PyType_Ready(&ExtractionPy) < 0){
+        return NULL;
+    }
+
+    PyObject *neucomm = PyModule_Create(&neucommModule);
+
+    Py_INCREF(&ExtractionPy);
+    if(PyModule_AddObject(neucomm, "Extraction", (PyObject *)&ExtractionPy) < 0){
+        Py_DECREF(&ExtractionPy);
+        Py_DECREF(neucomm);
+        return NULL;
+    }
+
+    return neucomm;
 }
 
