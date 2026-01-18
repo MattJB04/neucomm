@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neucomm"
+version = "0.1.0"
+description = "Neutrino communication utilities"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+packages = ["neucomm"]
+
+[tool.setuptools.package-data]
+neucomm = ["*.pyi"]
+
+[[tool.setuptools.ext-modules]]
+name = "neucomm._core"
+sources = [
+    "neucomm/_core.c",
+    "neucomm/basic_func.c",
+    "neucomm/common.c",
+]
+include-dirs = ["neucomm"]

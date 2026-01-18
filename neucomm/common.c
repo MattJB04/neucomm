@@ -1,14 +1,12 @@
-#include <python3.14/Python.h>
-//Struct for a simple extraction. Might add more details later. For now it just has protons per bunch, rise time and fall time
-typedef struct {
-    PyObject_HEAD
-    double ppb; //protons per bunch
-    long bunches; //Number of bunches
-    double bunch_spacing; //Bunch spacing
-    double rise_time; //rise time for the kicker magnets
-    double fall_time; //fall time for the kicker magnets (might be unnecassary?)
-} Extraction;
+#include <math.h>
+#include <time.h>
+#include "common.h"
 
+const double c = 299792458.0;
+
+/*-------------------------------------------*/
+/* Defining struct/python class "Extraction" */
+/*-------------------------------------------*/
 //Deallocator: 
 static void MyObject_dealloc(Extraction *self){
     Py_TYPE(self)->tp_free((PyObject*)self);
@@ -60,3 +58,33 @@ void ExtractionPy_init(PyTypeObject* self){
     self->tp_init = (initproc)Extraction_init;
     self->tp_new = Extraction_new;
 }
+
+
+
+/*---------------------------------*/
+/* Poisson distribution calculator */
+/*---------------------------------*/
+int poisson(double expectation){
+    //generate a random "threshold" value
+    double threshold = rand()/(double)(RAND_MAX);
+    //current number of events we are considering
+    int n_events = 0;
+    //keep track of the running sum
+    double log_sum = 0;
+    //Then the probability/ log probability
+    double log_p;
+    double p;
+    //Loop through until the threshold is met
+    while(1){
+        log_p = ((double)n_events*log(expectation)) - expectation - log_sum;
+        p = exp(log_p);
+        if(p>threshold)
+        {
+            return n_events;
+        }
+        n_events++;
+        threshold -= p;
+        log_sum += log(n_events);
+    }
+}
+

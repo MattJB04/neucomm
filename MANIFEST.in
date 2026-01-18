@@ -1,1 +1,1 @@
-include *.h
+include neucomm/*.h
