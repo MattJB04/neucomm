@@ -9,8 +9,8 @@ Download the correct .whl file (in dist) and run pip install *whl. Since this is
 
 General usage is to create a proton extraction, and pass it to a model to generate a list of times that a neutrino was detected. As of 0.1.0, the only model is a very basic MINERvA model, for example:
 
-'''
+```
 import neucomm
 extraction = neucomm.Extraction(6e10, 588, 5e-9, 1e-6, 1e-6)
 neucomm.simple_minerva(extraction)
-'''
+```
