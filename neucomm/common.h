@@ -1,4 +1,4 @@
-#include <python3.14/Python.h>
+#include <Python.h>
 //Struct for a simple extraction. Might add more details later. For now it just has protons per bunch, rise time and fall time
 typedef struct Extraction{
     PyObject_HEAD

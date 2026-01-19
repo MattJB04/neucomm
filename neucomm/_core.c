@@ -1,4 +1,4 @@
-#include <python3.14/Python.h>
+#include <Python.h>
 #include "basic_func.h"
 #include "common.h"
 
