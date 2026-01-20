@@ -1,6 +1,10 @@
-from ._core import simple_minerva, Extraction
+from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse
 
-__all__ = ["simple_minerva", "Extraction"]
+__all__ = [
+    "simple_minerva",
+    "Extraction",
+    "NeutrinoFlux",
+    "numi_no_transverse"]
 
 def simple_minerva(extraction: Extraction) -> list:
     """A very basic model. Takes in a proton extraction, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the times of detected neutrinos, relative to the start of an extraction
@@ -34,3 +38,10 @@ class Extraction:
             Fall time of kicker magnet (seconds)"""
         ...
 
+class NeutrinoFlux:
+    """A neutrino flux"""
+    ...
+
+def numi_no_transverse() -> NeutrinoFlux:
+    """numi with no transeverse momentum"""
+    ...

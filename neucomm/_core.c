@@ -1,9 +1,11 @@
 #include <Python.h>
 #include "basic_func.h"
 #include "common.h"
+#include "accelerators.h"
 
 static PyMethodDef neucommMethods[] = {
     {"simple_minerva", simple_minerva_py, METH_VARARGS, "A very basic model. Takes in a bunch size, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the number of detected neutrinos"},
+    {"numi_no_transverse", numi_no_transverse_py, METH_VARARGS, "numi neutrino distribution, with no transverse momentum (effectively means that all neutrinos pass through the detector)"},
     {NULL, NULL, 0, NULL}
 };
 
@@ -20,15 +22,21 @@ PyMODINIT_FUNC PyInit__core(void) {
     srand(time(NULL));
 
     ExtractionPy_init(&ExtractionPy);
-    if(PyType_Ready(&ExtractionPy) < 0){
+    NeutrinoFluxPy_init(&NeutrinoFluxPy);
+    if(PyType_Ready(&ExtractionPy) < 0 || PyType_Ready(&NeutrinoFluxPy) < 0){
         return NULL;
     }
-
     PyObject *neucomm = PyModule_Create(&neucommModule);
 
     Py_INCREF(&ExtractionPy);
     if(PyModule_AddObject(neucomm, "Extraction", (PyObject *)&ExtractionPy) < 0){
         Py_DECREF(&ExtractionPy);
+        Py_DECREF(neucomm);
+        return NULL;
+    }
+    Py_INCREF(&NeutrinoFluxPy);
+    if(PyModule_AddObject(neucomm, "NeutrinoFlux", (PyObject* )&NeutrinoFluxPy) < 0){
+        Py_DECREF(&NeutrinoFluxPy);
         Py_DECREF(neucomm);
         return NULL;
     }

@@ -41,7 +41,7 @@ PyObject* simple_minerva_py(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    struct simple_minerva_tuple temp = simple_minerva(extraction);
+    simple_minerva_tuple temp = simple_minerva(extraction);
     PyObject *list = PyList_New(temp.size);
     long i;
     for(i = 0; i < temp.size; i++){
