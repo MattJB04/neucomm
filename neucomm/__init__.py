@@ -11,8 +11,10 @@ models and detector models. There are some exceptions, typically simple
 models that simulate the entire process. Even with these simple models,
 the start point will be an extraction"""
 
-from ._core import simple_minerva, Extraction
+from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse
 
 __all__ = [
     "simple_minerva",
-    "Extraction"]
+    "Extraction",
+    "NeutrinoFlux",
+    "numi_no_transverse"]

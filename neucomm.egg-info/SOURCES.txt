@@ -4,6 +4,8 @@ pyproject.toml
 neucomm/__init__.py
 neucomm/__init__.pyi
 neucomm/_core.c
+neucomm/accelerators.c
+neucomm/accelerators.h
 neucomm/basic_func.c
 neucomm/basic_func.h
 neucomm/common.c
