@@ -2,10 +2,13 @@
 #include "basic_func.h"
 #include "common.h"
 #include "accelerators.h"
+#include "convoluted.h"
 
 static PyMethodDef neucommMethods[] = {
     {"simple_minerva", simple_minerva_py, METH_VARARGS, "A very basic model. Takes in a bunch size, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the number of detected neutrinos"},
     {"numi_no_transverse", numi_no_transverse_py, METH_VARARGS, "numi neutrino distribution, with no transverse momentum (effectively means that all neutrinos pass through the detector)"},
+    {"encode_convolution", encode_convolution, METH_VARARGS, "Convolution encoder"},
+    {"decode_convolution", decode_convolution, METH_VARARGS, "Convolution decoder"},
     {NULL, NULL, 0, NULL}
 };
 

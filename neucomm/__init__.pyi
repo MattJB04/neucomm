@@ -1,10 +1,12 @@
-from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse
+from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse, encode_convolution, decode_convolution
 
 __all__ = [
     "simple_minerva",
     "Extraction",
     "NeutrinoFlux",
-    "numi_no_transverse"]
+    "numi_no_transverse",
+    "encode_convolution",
+    "decode_convolution"]
 
 def simple_minerva(extraction: Extraction) -> list:
     """A very basic model. Takes in a proton extraction, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the times of detected neutrinos, relative to the start of an extraction
@@ -43,5 +45,15 @@ class NeutrinoFlux:
     ...
 
 def numi_no_transverse() -> NeutrinoFlux:
-    """numi with no transeverse momentum"""
+    """numi with no transeverse momentum - still a work in progress!"""
     ...
+
+def encode_convolution() -> list:
+    """A convolution encoder, with a rate of 1/2 and constraint length of 7 (The same that NuMI used)
+    
+    Takes in a string, and returns the encoded binary as a list"""
+
+def decode_convolution() -> list:
+    """A convolution decoder, using the viterbi algorith. Generates the trellis using the encode_convolution method.
+    
+    Takes in a list of binary, and returns a string"""
