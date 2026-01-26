@@ -59,58 +59,58 @@ void ExtractionPy_init(PyTypeObject* self){
 }
 
 
-/*----------------------------------------------*/
-/* Defining the struct/python type NeutrinoFlux */
-/*----------------------------------------------*/
+// /*----------------------------------------------*/
+// /* Defining the struct/python type NeutrinoFlux */
+// /*----------------------------------------------*/
 
-static void NeutrinoFlux_dealloc(NeutrinoFlux *self)
-{
-    if (!self) return;
+// static void NeutrinoFlux_dealloc(NeutrinoFlux *self)
+// {
+//     if (!self) return;
 
-    if (self->energy_distribution) {
-        for (int i = 0; i < self->number_bunches; i++) {
-            Distribution_dealloc(self->energy_distribution[i]);
-        }
-        free(self->energy_distribution);
-    }
+//     if (self->energy_distribution) {
+//         for (int i = 0; i < self->number_bunches; i++) {
+//             Distribution_dealloc(self->energy_distribution[i]);
+//         }
+//         free(self->energy_distribution);
+//     }
 
-    Py_TYPE(self)->tp_free((PyObject*)self);
-}
-
-
-static PyObject* NeutrinoFlux_new(PyTypeObject *type, PyObject *args, PyObject *kwds){
-    NeutrinoFlux* self;
-    self = (NeutrinoFlux*)type->tp_alloc(type, 0);
-
-    //Need to initialise this shit for some reason
-    self->energy_distribution = NULL;
-    self->number_bunches = 0;
-    self->spacing = 0.0;
+//     Py_TYPE(self)->tp_free((PyObject*)self);
+// }
 
 
-    return (PyObject *)self;
-}
+// static PyObject* NeutrinoFlux_new(PyTypeObject *type, PyObject *args, PyObject *kwds){
+//     NeutrinoFlux* self;
+//     self = (NeutrinoFlux*)type->tp_alloc(type, 0);
+
+//     //Need to initialise this shit for some reason
+//     self->energy_distribution = NULL;
+//     self->number_bunches = 0;
+//     self->spacing = 0.0;
 
 
-static PyMethodDef NeutrinoFlux_methods[] = {
-    {NULL}
-};
+//     return (PyObject *)self;
+// }
 
-PyTypeObject NeutrinoFluxPy = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-};
 
-void NeutrinoFluxPy_init(PyTypeObject* self){
-    self->tp_name = "neucomm.NeutrinoFlux";
-    self->tp_basicsize = sizeof(NeutrinoFlux);
-    self->tp_itemsize = 0;
-    self->tp_dealloc = (destructor)NeutrinoFlux_dealloc;
-    self->tp_flags = Py_TPFLAGS_DEFAULT;
-    self->tp_doc = 
-    "A datatype describing a neutrino flux.\nShould be passed to a detector model to generate a list of times a neutrino was detected";
-    self->tp_methods = NeutrinoFlux_methods;
-    self->tp_new = NeutrinoFlux_new;
-}
+// static PyMethodDef NeutrinoFlux_methods[] = {
+//     {NULL}
+// };
+
+// PyTypeObject NeutrinoFluxPy = {
+//     PyVarObject_HEAD_INIT(NULL, 0)
+// };
+
+// void NeutrinoFluxPy_init(PyTypeObject* self){
+//     self->tp_name = "neucomm.NeutrinoFlux";
+//     self->tp_basicsize = sizeof(NeutrinoFlux);
+//     self->tp_itemsize = 0;
+//     self->tp_dealloc = (destructor)NeutrinoFlux_dealloc;
+//     self->tp_flags = Py_TPFLAGS_DEFAULT;
+//     self->tp_doc = 
+//     "A datatype describing a neutrino flux.\nShould be passed to a detector model to generate a list of times a neutrino was detected";
+//     self->tp_methods = NeutrinoFlux_methods;
+//     self->tp_new = NeutrinoFlux_new;
+// }
 
 
 
@@ -142,18 +142,18 @@ int poisson(double expectation){
 }
 
 
-Distribution* Distribution_alloc(int number_buckets){
-    Distribution* distribution = malloc(sizeof(Distribution));
-    distribution->number_buckets = number_buckets;
-    distribution->buckets_center = (double*)malloc(number_buckets*sizeof(double));
-    distribution->buckets_value = (double*)malloc(number_buckets*sizeof(double));
-    return distribution;
-}
+// Distribution* Distribution_alloc(int number_buckets){
+//     Distribution* distribution = malloc(sizeof(Distribution));
+//     distribution->number_buckets = number_buckets;
+//     distribution->buckets_center = (double*)malloc(number_buckets*sizeof(double));
+//     distribution->buckets_value = (double*)malloc(number_buckets*sizeof(double));
+//     return distribution;
+// }
 
-//dealloc a Distribution
-void Distribution_dealloc(Distribution *self){
-    if (!self) return;
-    free(self->buckets_center);
-    free(self->buckets_value);
-    free(self);
-}
+// //dealloc a Distribution
+// void Distribution_dealloc(Distribution *self){
+//     if (!self) return;
+//     free(self->buckets_center);
+//     free(self->buckets_value);
+//     free(self);
+// }

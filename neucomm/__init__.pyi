@@ -52,8 +52,10 @@ def encode_convolution() -> list:
     """A convolution encoder, with a rate of 1/2 and constraint length of 7 (The same that NuMI used)
     
     Takes in a string, and returns the encoded binary as a list"""
+    ...
 
 def decode_convolution() -> list:
     """A convolution decoder, using the viterbi algorith. Generates the trellis using the encode_convolution method.
     
     Takes in a list of binary, and returns a string"""
+    ...

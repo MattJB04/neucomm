@@ -23,25 +23,25 @@ extern const double c; //speed of light
 
 
 
-//A type for a discrete 1D distribution
-typedef struct Distribution{
-    double* buckets_center; //Center of the buckets for the distribution
-    double* buckets_value; //The value of the buckets
-    int number_buckets; //The number of buckets
-} Distribution;
-//And python versions
-extern PyTypeObject NeutrinoFluxPy;
-void NeutrinoFluxPy_init(PyTypeObject* self);
-//allocate memmory for distribution
-Distribution* Distribution_alloc(int number_buckets);
-//deallocate memory for distribution
-void Distribution_dealloc(Distribution *self);
+// //A type for a discrete 1D distribution
+// typedef struct Distribution{
+//     double* buckets_center; //Center of the buckets for the distribution
+//     double* buckets_value; //The value of the buckets
+//     int number_buckets; //The number of buckets
+// } Distribution;
+// //And python versions
+// extern PyTypeObject NeutrinoFluxPy;
+// void NeutrinoFluxPy_init(PyTypeObject* self);
+// //allocate memmory for distribution
+// Distribution* Distribution_alloc(int number_buckets);
+// //deallocate memory for distribution
+// void Distribution_dealloc(Distribution *self);
 
-//Struct for a neutrino beam. Has pointers to functions that generate the relevant distribution.
-typedef struct NeutrinoFlux{
-    PyObject_HEAD;
-    Distribution** energy_distribution; //energy distribution
-    long number_bunches; //The number of bunches in one extraction
-    double spacing; //Bunch spacing of the extractions
-} NeutrinoFlux;
+// //Struct for a neutrino beam. Has pointers to functions that generate the relevant distribution.
+// typedef struct NeutrinoFlux{
+//     PyObject_HEAD;
+//     Distribution** energy_distribution; //energy distribution
+//     long number_bunches; //The number of bunches in one extraction
+//     double spacing; //Bunch spacing of the extractions
+// } NeutrinoFlux;
 #endif
