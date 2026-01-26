@@ -3,6 +3,7 @@
 #include "common.h"
 #include "accelerators.h"
 #include "convoluted.h"
+#include "neutrino_flux.h"
 
 static PyMethodDef neucommMethods[] = {
     {"simple_minerva", simple_minerva_py, METH_VARARGS, "A very basic model. Takes in a bunch size, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the number of detected neutrinos"},

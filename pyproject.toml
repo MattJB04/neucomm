@@ -22,6 +22,7 @@ sources = [
     "neucomm/basic_func.c",
     "neucomm/common.c",
     "neucomm/accelerators.c",
-    "neucomm/convoluted.c"
+    "neucomm/convoluted.c",
+    "neucomm/neutrino_flux.c"
 ]
 include-dirs = ["neucomm"]
