@@ -1,4 +1,4 @@
-from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse, encode_convolution, decode_convolution
+from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse, encode_convolution, decode_convolution, cylindrical_water
 
 __all__ = [
     "simple_minerva",
@@ -6,7 +6,8 @@ __all__ = [
     "NeutrinoFlux",
     "numi_no_transverse",
     "encode_convolution",
-    "decode_convolution"]
+    "decode_convolution",
+    "cylindrical_water"]
 
 def simple_minerva(extraction: Extraction) -> list:
     """A very basic model. Takes in a proton extraction, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the times of detected neutrinos, relative to the start of an extraction
@@ -44,18 +45,27 @@ class NeutrinoFlux:
     """A neutrino flux"""
     ...
 
-def numi_no_transverse() -> NeutrinoFlux:
+def numi_no_transverse(extraction: Extraction) -> NeutrinoFlux:
     """numi with no transeverse momentum - still a work in progress!"""
     ...
 
-def encode_convolution() -> list:
+def encode_convolution(string: list) -> list:
     """A convolution encoder, with a rate of 1/2 and constraint length of 7 (The same that NuMI used)
     
     Takes in a string, and returns the encoded binary as a list"""
     ...
 
-def decode_convolution() -> list:
+def decode_convolution(binary: list) -> list:
     """A convolution decoder, using the viterbi algorith. Generates the trellis using the encode_convolution method.
     
     Takes in a list of binary, and returns a string"""
     ...
+
+def cylindrical_water(flux: NeutrinoFlux, distance: float, radius: float, length: float, samples: int) -> list:
+    """Cylindrical water Cherenkov detector. Input a neutrino flux and relavent parameters to generate a list of times that a neutrino was detected.
+
+    Due to limits on computational power, a statistical approach is used. The detector samples from a distribution. 
+    Having a larger number of samples will make the simulation more accurate, but will take longer to run.
+
+    Setting the samples to -1 will attempt to sample for each individual proton. This is NOT RECOMMENDED (and frankly, is not really possible unless
+    you have a super computer laying around)"""
