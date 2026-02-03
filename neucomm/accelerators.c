@@ -12,7 +12,7 @@ static NeutrinoMomentum numi_no_transverse(double protons, double* args){
     int number_buckets = 20;
 
     //Normalise the distribution for sampling
-    double bucket_width = number_buckets*0.5;
+    double bucket_width = 0.5;
     double area = 0; //area should give average number of neutrinos per proton (per area) so can be used later for scaling
     int i;
     for(i = 0; i < number_buckets; i++){
@@ -30,11 +30,14 @@ static NeutrinoMomentum numi_no_transverse(double protons, double* args){
         probability += buckets_value[i];
         if(probability >= threshold){
             out.p = bucket_center[i];
+            break;
         }
     }
 
+    //not sure how or why, but the calculated average number of neutrinos per proton is 
     out.number_neutrinos = area * protons;
     out.p_t = 0;
+    printf("Number of neutrinos: %.10e\n", out.number_neutrinos);
     return out;
 }
 
