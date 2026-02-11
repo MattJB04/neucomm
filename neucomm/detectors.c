@@ -4,6 +4,8 @@
 #include "neutrino_flux.h"
 #include "common.h"
 
+const double water_number_density = 33.3679e2;
+
 int compar(const void* a, const void* b){
     return (*(int*)a - *(int*)b);
 }
@@ -16,8 +18,6 @@ double* cylindrical_water(NeutrinoFlux* flux, long samples, double distance, dou
     //Water cherenkov has relatively high threshold, so I need to check that a neutrino hits that threshold. This is the energy of needed to create a muon, and have it move 
     //faster than the local speed of light
     double energy_threshold = 0.2654;
-    //To calculate the probability of interaction, I need the number density of water
-    double water_number_density = 33.3679e27;
     long number_of_detections = 0;
     double* detect_array =(double*)malloc(2*(flux->bunches*samples*sizeof(double)));//per bunch per sample, store how many where detected and the corresponding detection time
     double protons_per_sample = flux->ppb/samples;
@@ -36,6 +36,7 @@ double* cylindrical_water(NeutrinoFlux* flux, long samples, double distance, dou
             //check that it passes the energy threshold:
             if(energy < energy_threshold){
                 detect_array[2* (i*samples + j) + 0] = 0;
+                detect_array[2*(i*samples + j) + 1] = time;
                 continue;
             }
             //Have to consider the case where p_t and p are 0 seperately to avoid dividing by 0 errors. If p is 0, there are no detections. If p_t is 0, 
@@ -77,7 +78,7 @@ double* cylindrical_water(NeutrinoFlux* flux, long samples, double distance, dou
                 //The rest is similar to the above
                 double probability = path_length*cross_section*energy*water_number_density;
                 detect_array[2*(i*samples + j) + 0] = poisson(probability*nm.number_neutrinos);
-                number_of_detections = detect_array[2*(i*samples + j) + 0];
+                number_of_detections += detect_array[2*(i*samples + j) + 0];
 
                 //travel time from when it enters the detector, which assumes the time in the detector is much small
                 double travel_time = sqrt(distance*distance*(1 + ptbyp*ptbyp))/c;
@@ -92,7 +93,7 @@ double* cylindrical_water(NeutrinoFlux* flux, long samples, double distance, dou
 
                 double probability = path_length*cross_section*energy*water_number_density;
                 detect_array[2*(i*samples + j) + 0] = poisson(probability*nm.number_neutrinos);
-                number_of_detections = detect_array[2*(i*samples + j) + 0];
+                number_of_detections += detect_array[2*(i*samples + j) + 0];
 
                 double travel_time = sqrt(distance*distance*(1 + ptbyp*ptbyp))/c;
                 detect_array[2*(i*samples + j) + 1] = travel_time + time;
@@ -101,7 +102,7 @@ double* cylindrical_water(NeutrinoFlux* flux, long samples, double distance, dou
         time += flux->bunch_spacing;
     }//bunches
 
-    //After populating the detection array, I want to move it into a cleaner array that is simply a lisNeed to calculate the path length in the detector. Easiest way is to parametrise the coords.t of times
+    //After populating the detection array, I want to move it into a cleaner array that is simply a list of time a neutrino was detectord
     *array_size = number_of_detections;
     double* detect_times = (double *)malloc(*array_size*sizeof(double));
     //more counters 
@@ -147,4 +148,80 @@ PyObject* cylindrical_water_py(PyObject *self, PyObject *args)
 
     free(time_array);
     return list;
+}
+
+
+
+double* spherical_submarine(NeutrinoFlux *flux, long samples, double distance, double radius, long* array_size){
+    //Starts kinda similar to the cylindical water case. First defining some parameters:
+    //Take the cross section for a charged current interaction for a neutrino, from the paper "From eV to Eev: Neutrino Cross-Sections Across Energy Scales"
+    //Very roughly, the paper includes a graph that I am intergrating by eye so kinda meh. No one will read this anyway. Units are m2/GeV
+    double cross_section = 0.8e-42;
+    //Not defining a threshold properly yet, but I'll include it so it is simple to adapt.
+    double threshold  = muon_mass;
+    long number_of_detections = 0;
+    double* detect_array =(double*)malloc(2*(flux->bunches*samples*sizeof(double)));//per bunch per sample, store how many where detected and the corresponding detection time
+    double protons_per_sample = flux->ppb/samples;
+    NeutrinoMomentum nm;
+    double dbyr = distance/radius;
+    double time = flux->rise_time;
+    double number_of_detections = 0;
+    int i, j;
+    //loop over bunches
+    for(i = 0; i < flux->bunches; i++){
+        //loop over samples
+        for(j = 0; j < samples; j++){
+            //sample the distribution
+            nm = flux->distribution(flux->ppb/samples, flux->args);
+            //check that it would reach the detector, even if it decays
+            if(nm.p < dbyr * nm.p_t){
+                detect_array[2*(i*samples + j) + 0] = 0;
+                detect_array[2*(i*samples + j) + 1] = time;
+                continue;
+            }
+            //assuming relativistic limit for the neutrino, find the energy:
+            double neutrino_energy = nm.p + nm.p_t;
+            //check that it can pass the threshold
+            if(neutrino_energy < threshold){
+                detect_array[2*(i*samples + j) + 0] = 0;
+                detect_array[2*(i*samples + j) + 1] = time;
+                continue;
+            }
+            //The only option left is that the neutrino is on path to the detector.
+            //need the muon energy next. Im simplifying a lot here, this is a critical assumption that will likely end up incorrect
+            double muon_energy = neutrino_energy - muon_mass;
+            double muon_gamma = muon_energy / muon_mass;
+            double v = sqrt((1-1/(muon_gamma*muon_gamma)))*c;
+            //Averge lifetime in rest frame
+            double muon_lifetime = muon_average_lifetime*muon_gamma;
+            //Then the path length whereby an interaction can occur
+            double path_length = muon_lifetime*v;
+            double probability = path_length*cross_section*neutrino_energy*water_number_density;
+            detect_array[2*(i*samples + j) + 0] = poisson(probability*nm.number_neutrinos);
+            number_of_detections += detect_array[2*(i*samples + j) + 0];
+            detect_array[2*(i*samples + j) + 1] = time + distance/c;
+        }//samples
+        time += flux->bunch_spacing;
+    }//bunches
+
+    //The rest is pretty much identical to the previous function
+    //Like the other function, this needs to get rolled out into a cleaner array
+    double* detect_times = (double*)malloc(number_of_detections*sizeof(double));
+    //more counters 
+    int detections, array_indices = 0;
+    //loop over bunches
+    for(i = 0; i < flux->bunches; i++){
+        //loop over samples
+        for(j = 0; j < samples; j++){
+            //Each entry of detect array can have multiple detections 
+            for(detections = 0; detections < detect_array[2*(i*samples + j) + 0]; detections++){
+                detect_times[array_indices] = detect_array[2*(i*samples + j) + 1];
+                array_indices += 1;
+            }
+        }
+    }
+    free(detect_array);
+    qsort(detect_times, number_of_detections, sizeof(double), compar);
+    *array_size = number_of_detections;
+    return detect_times;
 }

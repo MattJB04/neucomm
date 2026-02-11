@@ -3,6 +3,8 @@
 #include "common.h"
 
 const double c = 299792458.0;
+const double muon_mass = 0.10566;
+const double muon_average_lifetime = 2.19698e-6;
 
 /*-------------------------------------------*/
 /* Defining struct/python class "Extraction" */
