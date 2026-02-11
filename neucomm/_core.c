@@ -2,7 +2,7 @@
 #include "basic_func.h"
 #include "common.h"
 #include "accelerators.h"
-#include "convoluted.h"
+#include "codes/codes.h"
 #include "neutrino_flux.h"
 #include "detectors.h"
 
@@ -12,6 +12,8 @@ static PyMethodDef neucommMethods[] = {
     {"encode_convolution", encode_convolution, METH_VARARGS, "Convolution encoder"},
     {"decode_convolution", decode_convolution, METH_VARARGS, "Convolution decoder"},
     {"cylindrical_water", cylindrical_water_py, METH_VARARGS, "Geometrically simplest detector, a cylinder oriented along the beam axis. This one is a water cherenkov detector. "},
+    {"string_to_bits", string_to_bits, METH_VARARGS, "Converts a string into an array of bits (probably best to use regular ASCII for this)"},
+    {"bits_to_string", bits_to_string, METH_VARARGS, "Converts a list of bits into ASCII characters"},
     {NULL, NULL, 0, NULL}
 };
 

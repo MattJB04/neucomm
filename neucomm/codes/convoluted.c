@@ -1,54 +1,12 @@
 #include "convoluted.h"
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef uint8_t u8;
-
-#define INF __UINT8_MAX__
 #define K 7
 const u8 poly1 = 0b101011; //generator polynomial 1
-const u8 poly2 = 0b101011; //generator polynomial 2
+const u8 poly2 = 0b111101; //generator polynomial 2
 #define NUM_STATES (1 << (K - 1))
 
-/*-------------------*/
-/* Utility Functions */
-/*-------------------*/
-
-//Shift a byte and a bit to the end
-static inline u8 shift_in(u8 x, u8 bit){
-    return (x << 1) | (bit & 1);
-}
-
-//Calculate the parity of a byte:
-static inline u8 parity(u8 x){
-    return __builtin_parity(x);
-}
-
-//Calculate the hamming distance of two bytes:
-static inline int hamming(u8 a, u8 b){
-    return __builtin_popcount(a ^ b);
-}
-
-/*Convert array of bits to ASCII characters
-returns newly allocated string*/
-char *bits_to_string(const u8 *bits, size_t T) {
-    size_t str_len = T / 8;
-    char *str = malloc(str_len + 1);
-    if (!str) return NULL;
-    
-    for (size_t i = 0; i < str_len; i++) {
-        u8 byte = 0;
-        for (int b = 0; b < 8; b++) {
-            byte = (byte << 1) | bits[i * 8 + b];
-        }
-        str[i] = byte;
-    }
-    str[str_len] = '\0';
-    
-    return str;
-}
-/*defo a better way to do this*/
 
 /*---------*/
 /* Trellis */
@@ -151,6 +109,18 @@ static u8* unpack_bytes(const u8 *bits, size_t length, size_t *T){
     return rx;
 }
 
+//Once done, I want to return the bits as bytes, so they need to be repacked:
+static u8* pack_bits_to_bytes(const u8 *bits, size_t num_bits, size_t *out_len) {
+    *out_len = (num_bits + 7) / 8;  // Round up
+    u8 *bytes = calloc(*out_len, sizeof(u8));
+    if (!bytes) return NULL;
+    
+    for (size_t i = 0; i < num_bits; i++) {
+        bytes[i / 8] |= (bits[i] & 1) << (7 - (i % 8));
+    }
+    
+    return bytes;
+}
 
 u8 *devolve(const u8 *bits, size_t length, size_t *decoded_len) {
     
@@ -214,9 +184,9 @@ u8 *devolve(const u8 *bits, size_t length, size_t *decoded_len) {
         }
     }
 
-    // Allocate decoded output
-    u8 *decoded = malloc(T);
-    if (!decoded) {
+     // Allocate decoded output for individual bits
+    u8 *decoded_bits = malloc(T);
+    if (!decoded_bits) {
         free(rx);
         free(survivor);
         return NULL;
@@ -225,14 +195,16 @@ u8 *devolve(const u8 *bits, size_t length, size_t *decoded_len) {
     // Traceback to recover input bits
     for (size_t t = T; t-- > 0;) {
         u8 trans = survivor[t][best_state];
-        decoded[t] = trellis[best_state].input_bit[trans];
+        decoded_bits[t] = trellis[best_state].input_bit[trans];
         best_state = trellis[best_state].prev_state[trans];
     }
 
-    *decoded_len = T;
+    // Pack bits back into bytes
+    u8 *decoded = pack_bits_to_bytes(decoded_bits, T, decoded_len);
     
     free(rx);
     free(survivor);
+    free(decoded_bits);
     
     return decoded;
 }
@@ -242,26 +214,22 @@ u8 *devolve(const u8 *bits, size_t length, size_t *decoded_len) {
 /*-----------------*/
 
 PyObject* encode_convolution(PyObject *self, PyObject *args){
-    u8* input;
-    if(!PyArg_ParseTuple(args, "s", &input)){
+    PyObject* input;
+    if(!PyArg_ParseTuple(args, "O!", &PyList_Type, &input)){
         return NULL;
     };
-    size_t input_length = strlen((char*)input);
+    size_t input_length = PyList_GET_SIZE(input);
+    size_t formatted_length;
+    u8* formatted_input = py_bin_to_byte(input, input_length, &formatted_length);
 
-    size_t output_length;
-    u8* output = convolve(input, input_length, &output_length);
+    size_t output_length;    
+    u8* output = convolve(formatted_input, formatted_length, &output_length);
+    free(formatted_input);
 
-    PyObject *list = PyList_New(output_length*8);
-    size_t i;
-    int j;
-    for(i = 0; i < output_length; i++){
-        for(j = 7; j>=0; j--){
-            PyObject *val = Py_BuildValue("i", (output[i] & (1 << j)? 1 : 0));
-            PyList_SET_ITEM(list, (8*i) + (7-j), val);
-        }
-    }
-
+    size_t list_size;
+    PyObject* list = byte_to_py_bin(output, output_length, &list_size);
     free(output);
+    
     return list;
 }
 
@@ -270,26 +238,17 @@ PyObject* decode_convolution(PyObject *self, PyObject *args){
     if(!PyArg_ParseTuple(args, "O!", &PyList_Type, &input)){
         return NULL;
     }
-    size_t input_length = PyList_GET_SIZE(input)/8;
-    u8* parsed_input = calloc(input_length, sizeof(u8));
-
-    size_t i;
-    int j;
-    for(i = 0; i < input_length; i++){
-        for(j = 0; j < 8; j++){
-            parsed_input[i] = shift_in(parsed_input[i], (u8)PyLong_AsLong(PyList_GetItem(input, (8*i) + j)));
-        }
-    }
+    size_t input_length = PyList_GET_SIZE(input);
+    size_t parsed_input_length;
+    u8* parsed_input = py_bin_to_byte(input, input_length, &parsed_input_length);
 
     size_t output_length;
-    u8* output_bits = devolve(parsed_input, input_length, &output_length);
-
-    char* output = bits_to_string(output_bits, output_length);
-
-    PyObject *output_string = Py_BuildValue("s", output);
-
-    free(output);
-    free(output_bits);
+    u8* output_bits = devolve(parsed_input, parsed_input_length, &output_length);
     free(parsed_input);
-    return output_string;
+
+    size_t parsed_output_length;
+    PyObject* output = byte_to_py_bin(output_bits, output_length, &parsed_output_length);
+    free(output_bits);
+
+    return output;
 }
