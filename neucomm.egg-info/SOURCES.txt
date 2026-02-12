@@ -1,6 +1,7 @@
 MANIFEST.in
 README.md
 pyproject.toml
+setup.py
 neucomm/__init__.py
 neucomm/__init__.pyi
 neucomm/_core.c
@@ -10,7 +11,16 @@ neucomm/basic_func.c
 neucomm/basic_func.h
 neucomm/common.c
 neucomm/common.h
+neucomm/detectors.c
+neucomm/detectors.h
+neucomm/neutrino_flux.c
+neucomm/neutrino_flux.h
 neucomm.egg-info/PKG-INFO
 neucomm.egg-info/SOURCES.txt
 neucomm.egg-info/dependency_links.txt
 neucomm.egg-info/top_level.txt
+neucomm/codes/__init__.py
+neucomm/codes/codes.c
+neucomm/codes/codes.h
+neucomm/codes/convoluted.c
+neucomm/codes/convoluted.h

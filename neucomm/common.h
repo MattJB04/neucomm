@@ -19,9 +19,9 @@ void ExtractionPy_init(PyTypeObject* self);
 //poisson distribution calculator
 int poisson(double expectation);
 
-extern const double c; //speed of light
-
-
+extern const double c; //speed of light in m/s
+extern const double muon_mass; //muon rest mass in GeV
+extern const double muon_average_lifetime; //muon average lifetime in seconds (halflife/ln(2))
 
 // //A type for a discrete 1D distribution
 // typedef struct Distribution{

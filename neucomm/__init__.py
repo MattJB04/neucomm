@@ -12,6 +12,7 @@ models that simulate the entire process. Even with these simple models,
 the start point will be an extraction"""
 
 from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse, encode_convolution, decode_convolution, cylindrical_water
+from ._core import bits_to_string, string_to_bits
 
 __all__ = [
     "simple_minerva",
@@ -20,4 +21,6 @@ __all__ = [
     "numi_no_transverse",
     "encode_convolution",
     "decode_convolution",
-    "cylindrical_water"]
+    "cylindrical_water",
+    "bits_to_string",
+    "string_to_bits"]
