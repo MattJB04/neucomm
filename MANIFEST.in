@@ -1,2 +1,3 @@
 include neucomm/*.h
 include neucomm/codes/*.h
+include neucomm/Finalis/*.h
