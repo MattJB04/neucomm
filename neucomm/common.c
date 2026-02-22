@@ -143,6 +143,16 @@ int poisson(double expectation){
     }
 }
 
+//expose poisson distribution to python
+PyObject* poissonPy(PyObject* self, PyObject* args){
+    double expectation;
+
+    if(!PyArg_ParseTuple(args, "d", &expectation));
+
+    int result = poisson(expectation);
+    return PyLong_FromLong(result);
+}
+
 
 // Distribution* Distribution_alloc(int number_buckets){
 //     Distribution* distribution = malloc(sizeof(Distribution));

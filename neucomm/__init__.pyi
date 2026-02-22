@@ -1,5 +1,5 @@
 from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse, encode_convolution, decode_convolution, cylindrical_water
-from ._core import bits_to_string, string_to_bits, water_expectation, cross_section_huber, Huber_flux, distribution, MINERvA_flux
+from ._core import bits_to_string, string_to_bits, water_expectation, cross_section_huber, Huber_flux, distribution, MINERvA_flux, poisson
 
 __all__ = [
     "simple_minerva",
@@ -15,7 +15,8 @@ __all__ = [
     "water_expectation",
     "Huber_flux",
     "distribution",
-    "MINERvA_flux"]
+    "MINERvA_flux",
+    "poisson"]
 
 def simple_minerva(extraction: Extraction) -> list:
     """A very basic model. Takes in a proton extraction, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the times of detected neutrinos, relative to the start of an extraction
@@ -110,4 +111,8 @@ def Huber_flux(energy: list, E_0: float, L: float, N_mu: float, area: float) -> 
 
 def MINERvA_flux(POT=2.23e13) -> distribution:
     """MINERvA flux from the MINERvA flux predictions paper. Leave arguments empty for the same number of POT then NUMI. Changing the number scales linearly - potententially not accurate"""
+    ...
+
+def poisson(expectation: float) -> int:
+    """Returns a random sample from a poisson distribution"""
     ...
