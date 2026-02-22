@@ -19,6 +19,9 @@ neucomm.egg-info/PKG-INFO
 neucomm.egg-info/SOURCES.txt
 neucomm.egg-info/dependency_links.txt
 neucomm.egg-info/top_level.txt
+neucomm/Finalis/water_expectation.c
+neucomm/codes/codes.c
+neucomm/codes/convoluted.c
 neucomm/Finalis/__init__.py
 neucomm/Finalis/water_expectation.c
 neucomm/Finalis/water_expectation.h

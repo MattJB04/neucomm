@@ -10,7 +10,7 @@ typedef struct NeutrinoMomentum{
 } NeutrinoMomentum;
 
 typedef struct NeutrinoFlux{
-    PyObject_HEAD;
+    PyObject_HEAD
     NeutrinoMomentum (*distribution)(double protons, double* args);
     double ppb;
     long bunches;

@@ -12,7 +12,7 @@ typedef struct distribution{
     size_t num_of_values;
 } distribution;
 
-static const double a = 10e-42;
+#define a 10e-42
 static double buckets_bounds[] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 static double buckets_values[] = {a*0.4, a*0.62, a*0.8, a*0.82, a*0.88, a*0.96, a*0.98, a*0.98, a*0.9, a*0.8, a*0.79, a*0.78, a*0.77, a*0.76, 
                                 a*0.75, a*0.74, a*0.73, a*0.72, a*0.71, a*0.70, a*0.69, a*0.68, a*0.67, a*0.66, a*0.65, a*0.64, a*0.63};

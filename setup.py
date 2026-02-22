@@ -1,4 +1,5 @@
 from setuptools import setup, Extension
+import sys
 
 setup(
     ext_modules=[
@@ -16,6 +17,7 @@ setup(
                 "neucomm/Finalis/water_expectation.c"
             ],
             include_dirs=["neucomm", "neucomm/codes", "neucomm/Finalis"],
+            extra_compile_args=['/std:c11'] if sys.platform == 'win32' else ['-std=c99'],
         )
     ]
 )

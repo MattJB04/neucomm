@@ -2,7 +2,7 @@
 #define WATER_EXPECTATION_H
 #include <Python.h>
 typedef struct distribution{
-    PyObject_HEAD;
+    PyObject_HEAD
     size_t size;
     double* values;
     double* bounds;

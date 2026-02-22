@@ -5,8 +5,15 @@
 #ifndef CODES_H
 #define CODES_H
 
+#ifdef _MSC_VER
+    #include <intrin.h>
+    #define __builtin_parity(x) (__popcnt(x) & 1)
+    #define __builtin_popcount(x) __popcnt(x)
+#endif
+
+
 typedef uint8_t u8;
-#define INF __UINT8_MAX__
+#define INF UINT8_MAX
 
 
 extern u8 shift_in(u8 x, u8 bit);
