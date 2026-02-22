@@ -1,5 +1,5 @@
 from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse, encode_convolution, decode_convolution, cylindrical_water
-from ._core import bits_to_string, string_to_bits
+from ._core import bits_to_string, string_to_bits, water_expectation, cross_section_huber, Huber_flux, distribution, MINERvA_flux
 
 __all__ = [
     "simple_minerva",
@@ -8,7 +8,14 @@ __all__ = [
     "numi_no_transverse",
     "encode_convolution",
     "decode_convolution",
-    "cylindrical_water"]
+    "cylindrical_water",
+    "bits_to_string",
+    "string_to_bits",
+    "cross_section_huber",
+    "water_expectation",
+    "Huber_flux",
+    "distribution",
+    "MINERvA_flux"]
 
 def simple_minerva(extraction: Extraction) -> list:
     """A very basic model. Takes in a proton extraction, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the times of detected neutrinos, relative to the start of an extraction
@@ -41,6 +48,10 @@ class Extraction:
         fall_time : float
             Fall time of kicker magnet (seconds)"""
         ...
+
+class distribution:
+    """A distribution, used for the flux and cross-section distributions. This is a simple histogram distribution, with values and bounds. The value of the distribution between bounds[i] and bounds[i+1] is values[i]"""
+    ...
 
 class NeutrinoFlux:
     """A neutrino flux"""
@@ -83,3 +94,20 @@ def string_to_bits(string: str) -> list:
     ...
 def bits_to_string(bits: list) -> str:
     """Takes in a list of bits, and returns the ASCII values of those bits as a string"""
+    ...
+
+def water_expectation(flux: distribution, cross_section: distribution, path_length_option: int, distance: float) -> float:
+    """Calculates the expected number of detections in a water cherenkov detector given a neutrino flux and a cross-section distribution. This is used for testing the cylindrical_water function, and is not intended to be used by itself"""
+    ...
+
+def cross_section_huber(energy: list) -> distribution:
+    """Calculates the Huber cross-section distribution for a given set of parameters. This is used for testing the water_expectation function, and is not intended to be used by itself"""
+    ...
+
+def Huber_flux(energy: list, E_0: float, L: float, N_mu: float, area: float) -> distribution:
+    """Calculates the Huber flux distribution for a given set of parameters. This is used for testing the water_expectation function, and is not intended to be used by itself"""
+    ...
+
+def MINERvA_flux(POT=2.23e13) -> distribution:
+    """MINERvA flux from the MINERvA flux predictions paper. Leave arguments empty for the same number of POT then NUMI. Changing the number scales linearly - potententially not accurate"""
+    ...

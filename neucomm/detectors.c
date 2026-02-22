@@ -165,7 +165,6 @@ double* spherical_submarine(NeutrinoFlux *flux, long samples, double distance, d
     NeutrinoMomentum nm;
     double dbyr = distance/radius;
     double time = flux->rise_time;
-    double number_of_detections = 0;
     int i, j;
     //loop over bunches
     for(i = 0; i < flux->bunches; i++){

@@ -12,9 +12,10 @@ setup(
                 "neucomm/neutrino_flux.c",
                 "neucomm/detectors.c",
                 "neucomm/codes/codes.c",
-                "neucomm/codes/convoluted.c"
+                "neucomm/codes/convoluted.c",
+                "neucomm/Finalis/water_expectation.c"
             ],
-            include_dirs=["neucomm", "neucomm/codes"],
+            include_dirs=["neucomm", "neucomm/codes", "neucomm/Finalis"],
         )
     ]
 )
