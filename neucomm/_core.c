@@ -19,6 +19,7 @@ static PyMethodDef neucommMethods[] = {
     {"cross_section_huber", cross_section_huberPy, METH_VARARGS, "Calculates the Huber cross-section distribution for a given set of parameters"},
     {"Huber_flux", Huber_fluxPy, METH_VARARGS, "Calculates the Huber flux distribution for a given set of parameters"},
     {"MINERvA_flux", MINERvA_fluxPy, METH_VARARGS, "The same flux that is predicted to be in the MINERvA detector"},
+    {"poisson", poissonPy, METH_VARARGS, "Expose the poisson distribution"},
     {NULL, NULL, 0, NULL}
 };
 
