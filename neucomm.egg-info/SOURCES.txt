@@ -27,4 +27,5 @@ neucomm/codes/codes.c
 neucomm/codes/codes.h
 neucomm/codes/convoluted.c
 neucomm/codes/convoluted.h
+neucomm/codes/rs.c
 neucomm/codes/rs.h
