@@ -20,6 +20,12 @@ static PyMethodDef neucommMethods[] = {
     {"Huber_flux", Huber_fluxPy, METH_VARARGS, "Calculates the Huber flux distribution for a given set of parameters"},
     {"MINERvA_flux", MINERvA_fluxPy, METH_VARARGS, "The same flux that is predicted to be in the MINERvA detector"},
     {"poisson", poissonPy, METH_VARARGS, "Expose the poisson distribution"},
+    {"encode_rs_8", encode_rs_8, METH_VARARGS, "Reed-Solomon encoder. 8 bit."},
+    {"decode_rs_erasures_8", decode_rs_erasures_8, METH_VARARGS, "Reed-Solomon decoder. Specifically erasure decoding. 8 bit."},
+    {"encode_rs_16", encode_rs_16, METH_VARARGS, "Reed-Solomon encoder. 16 bit"},
+    {"decode_rs_erasures_16", decode_rs_erasures_16, METH_VARARGS, "Reed-Solomon decoder. Specifically erasure decoding. 16 bit"},
+    {"string_to_bytes", string_to_bytes, METH_VARARGS, "Converts a string into a list of bytes (which python will display as an int)"},
+    {"bytes_to_string", bytes_to_string, METH_VARARGS, "Converts a list of bytes to a string"},
     {NULL, NULL, 0, NULL}
 };
 
@@ -34,6 +40,10 @@ static struct PyModuleDef neucommModule = {
 PyMODINIT_FUNC PyInit__core(void) {
     //set seed:
     srand(time(NULL));
+
+    //Need to initiallise the reed soloman lookup table
+    gf_init_8();
+    gf_init_16();
 
     ExtractionPy_init(&ExtractionPy);
     NeutrinoFluxPy_init(&NeutrinoFluxPy);

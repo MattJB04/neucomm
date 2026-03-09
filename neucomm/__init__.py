@@ -13,6 +13,7 @@ the start point will be an extraction"""
 
 from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse, encode_convolution, decode_convolution, cylindrical_water
 from ._core import bits_to_string, string_to_bits, water_expectation, cross_section_huber, Huber_flux, distribution, MINERvA_flux, poisson
+from ._core import encode_rs_8, decode_rs_erasures_8, encode_rs_16, decode_rs_erasures_16, string_to_bytes, bytes_to_string
 
 __all__ = [
     "simple_minerva",
@@ -29,4 +30,10 @@ __all__ = [
     "Huber_flux",
     "distribution",
     "MINERvA_flux",
-    "poisson"]
+    "poisson",
+    "encode_rs_8",
+    "decode_rs_erasures_8",
+    "encode_rs_16",
+    "decode_rs_erasures_16",
+    "string_to_bytes",
+    "bytes_to_string"]

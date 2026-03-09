@@ -1,5 +1,6 @@
 from ._core import simple_minerva, Extraction, NeutrinoFlux, numi_no_transverse, encode_convolution, decode_convolution, cylindrical_water
 from ._core import bits_to_string, string_to_bits, water_expectation, cross_section_huber, Huber_flux, distribution, MINERvA_flux, poisson
+from ._core import encode_rs_8, decode_rs_erasures_8, encode_rs_16, decode_rs_erasures_16, string_to_bytes, bytes_to_string 
 
 __all__ = [
     "simple_minerva",
@@ -16,7 +17,13 @@ __all__ = [
     "Huber_flux",
     "distribution",
     "MINERvA_flux",
-    "poisson"]
+    "poisson",
+    "encode_rs_8",
+    "decode_rs_erasures_8",
+    "encode_rs_16",
+    "decode_rs_erasures_16",
+    "string_to_bytes",
+    "bytes_to_string"]
 
 def simple_minerva(extraction: Extraction) -> list:
     """A very basic model. Takes in a proton extraction, and applies the MINERvA experimental event rate (0.81 per 2.25e13 POT). Returns the times of detected neutrinos, relative to the start of an extraction
@@ -116,3 +123,26 @@ def MINERvA_flux(POT=2.23e13) -> distribution:
 def poisson(expectation: float) -> int:
     """Returns a random sample from a poisson distribution"""
     ...
+
+def encode_rs_8(Bytes: list) -> list:
+    """Reed-Soloman encoder. For every 4 bytes, adds an extra 2 parity bytes"""
+    ...
+
+def decode_rs_erasures_8(Bytes: list) -> list:
+    """Reed-Soloman decoder. Expects 2 parity bits for every 4 information bits. 8 bit version"""
+    ...
+
+def encode_rs_16(Bytes: list) -> list:
+    """Reed-Soloman encoder. 16 bit version, for every 4 groups of 2 bytes, adds an extra 2 parity bytes"""
+    ...
+
+def decode_rs_erasures_16(Bytes: list) -> list:
+    """Reed-Soloman decoder. Expects 2 parity bits for every 4 information bits. 16 bit version"""
+    ...
+
+def string_to_bytes(string: str) -> list:
+    """Converts a string to a list of bytes. Python will display them as an integer"""
+    ...
+
+def bytes_to_string(bytes: list) -> str:
+    """Converts a list of bytes to a string. Can fail if a byte does not encoded a charater"""

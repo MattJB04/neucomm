@@ -33,6 +33,11 @@ double water_expectation(distribution* neutrinos, distribution* cross_section, d
         //muon energy 
         double E_mu = E_v - m_mu;
 
+        //check we reach the threshold energy
+        if(E_mu < threshold){
+            continue;
+        }
+
         double l_mu = length_func(E_mu);
 
         //now need the cross-section
